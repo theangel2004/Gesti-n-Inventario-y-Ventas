@@ -20,7 +20,7 @@ public function up(): void
         $table->integer('stock_actual');
         $table->integer('stock_minimo');
         $table->string('unidad_medida'); // Caja, Unidad, Bulto
-        
+        $table->foreignId('proveedor_id')->constrained('proveedores')->onDelete('cascade');
         // Llave foránea hacia categorías
         $table->foreignId('categoria_id')->constrained('categorias')->onDelete('cascade');
         

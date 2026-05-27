@@ -17,7 +17,7 @@ public function up(): void
         $table->dateTime('fecha_venta');
         $table->decimal('total', 10, 2);
         $table->enum('metodo_pago', ['contado', 'credito']);
-        
+        $table->enum('estado', ['pendiente', 'despachado', 'cancelado'])->default('pendiente');
         // Llave foránea hacia clientes
         $table->foreignId('cliente_id')->constrained('clientes')->onDelete('cascade');
         
