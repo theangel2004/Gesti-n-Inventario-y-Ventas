@@ -155,7 +155,8 @@
                 <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
                 <span class="font-label-lg text-label-lg">Dashboard</span>
             </a>
-            <a class="flex items-center gap-md text-secondary dark:text-secondary-fixed py-3 mx-2 px-4 hover:bg-surface-container-highest dark:hover:bg-surface-container hover:translate-x-1 transition-all duration-200" href="#">
+            <a class="flex items-center gap-md {{ Request::routeIs('inventory') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed' : 'text-secondary dark:text-secondary-fixed' }} rounded-xl mx-2 py-3 px-4 hover:translate-x-1 transition-all duration-200" 
+            href="{{ route('inventory') }}">
                 <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
                 <span class="font-label-lg text-label-lg">Inventory</span>
             </a>
@@ -163,17 +164,19 @@
                 <span class="material-symbols-outlined" data-icon="category">category</span>
                 <span class="font-label-lg text-label-lg">Categories</span>
             </a>
-            <a class="flex items-center gap-md text-secondary dark:text-secondary-fixed py-3 mx-2 px-4 hover:bg-surface-container-highest dark:hover:bg-surface-container hover:translate-x-1 transition-all duration-200" href="#">
+            <a class="flex items-center gap-md py-3 mx-2 px-4 transition-all hover:translate-x-1 duration-200 {{ request()->routeIs('partners.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl' : 'text-secondary dark:text-secondary-fixed hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" 
+            href="{{ route('partners.index') }}">
                 <span class="material-symbols-outlined" data-icon="group">group</span>
                 <span class="font-label-lg text-label-lg">Partners</span>
             </a>
-            <a class="flex items-center gap-md text-secondary dark:text-secondary-fixed py-3 mx-2 px-4 hover:bg-surface-container-highest dark:hover:bg-surface-container hover:translate-x-1 transition-all duration-200" href="#">
-                <span class="material-symbols-outlined" data-icon="point_of_sale">point_of_sale</span>
+            <a class="flex items-center gap-md py-3 mx-2 px-4 transition-all duration-200 hover:translate-x-1 {{ request()->routeIs('sales') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl' : 'text-secondary dark:text-secondary-fixed hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" href="{{ route('sales') }}">
+                <span class="material-symbols-outlined" style="{{ request()->routeIs('sales') ? 'font-variation-settings: \'FILL\' 1;' : '' }}">point_of_sale</span>
                 <span class="font-label-lg text-label-lg">Sales</span>
             </a>
-            <a class="flex items-center gap-md text-secondary dark:text-secondary-fixed py-3 mx-2 px-4 hover:bg-surface-container-highest dark:hover:bg-surface-container hover:translate-x-1 transition-all duration-200" href="#">
-                <span class="material-symbols-outlined" data-icon="assessment">assessment</span>
-                <span class="font-label-lg text-label-lg">Reports</span>
+            <a class="py-3 mx-2 font-label-lg text-label-lg transition-all hover:translate-x-1 flex items-center px-md gap-md {{ request()->routeIs('reports') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl font-bold' : 'text-secondary hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" 
+            href="{{ route('reports') }}">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assessment</span>
+                <span>Reports</span>
             </a>
         </nav>
 

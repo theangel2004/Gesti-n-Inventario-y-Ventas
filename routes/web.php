@@ -11,6 +11,14 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::view('/inventario', 'inventory')->name('inventory');
+
+Route::view('/partners', 'partners')->name('partners.index');
+
+Route::view('/ventas', 'sales')->name('sales');
+
+Route::view('/reportes', 'reports')->name('reports');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
