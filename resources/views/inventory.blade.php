@@ -8,42 +8,42 @@
             <p class="font-body-md text-body-md text-on-surface-variant">Administra tu inventario, precios y existencias en tiempo real.</p>
         </div>
         <button class="flex items-center gap-2 bg-primary text-on-primary px-lg py-sm rounded-xl hover:shadow-lg transition-all active:scale-95 font-title-md text-title-md" onclick="toggleModal('product-modal')">
-            <span class="material-symbols-outlined" data-icon="add">add</span>
+            <span class="material-symbols-outlined">add</span>
             Nuevo Producto
         </button>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-lg">
-        <div class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md">
+        <div class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md shadow-sm">
             <div class="p-3 bg-primary-container/10 text-primary rounded-full">
-                <span class="material-symbols-outlined" data-icon="inventory_2" data-weight="fill">inventory_2</span>
+                <span class="material-symbols-outlined">inventory_2</span>
             </div>
             <div>
                 <p class="font-label-md text-label-md text-on-surface-variant">Total Productos</p>
                 <p class="font-headline-md text-headline-md">1,248</p>
             </div>
         </div>
-        <div class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md">
+        <div class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md shadow-sm">
             <div class="p-3 bg-error-container/10 text-error rounded-full">
-                <span class="material-symbols-outlined" data-icon="warning" data-weight="fill">warning</span>
+                <span class="material-symbols-outlined">warning</span>
             </div>
             <div>
                 <p class="font-label-md text-label-md text-on-surface-variant">Sin Existencias</p>
                 <p class="font-headline-md text-headline-md">12</p>
             </div>
         </div>
-        <div class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md">
+        <div class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md shadow-sm">
             <div class="p-3 bg-secondary-container/10 text-secondary rounded-full">
-                <span class="material-symbols-outlined" data-icon="low_priority" data-weight="fill">low_priority</span>
+                <span class="material-symbols-outlined">low_priority</span>
             </div>
             <div>
                 <p class="font-label-md text-label-md text-on-surface-variant">Stock Bajo</p>
                 <p class="font-headline-md text-headline-md">45</p>
             </div>
         </div>
-        <div class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md">
+        <div class="bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md shadow-sm">
             <div class="p-3 bg-tertiary-container/10 text-on-tertiary-container rounded-full">
-                <span class="material-symbols-outlined" data-icon="trending_up" data-weight="fill">trending_up</span>
+                <span class="material-symbols-outlined">trending_up</span>
             </div>
             <div>
                 <p class="font-label-md text-label-md text-on-surface-variant">Nuevos (Mes)</p>
@@ -54,26 +54,26 @@
 
     <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col shadow-sm">
         <div class="p-md border-b border-outline-variant flex flex-col sm:flex-row gap-md items-center justify-between">
-            <div class="flex items-center gap-sm w-full sm:w-auto">
-                <select class="bg-surface-container-low border-outline-variant rounded-lg text-body-md py-2 px-3 focus:ring-primary">
+            <div class="flex flex-wrap items-center gap-sm w-full sm:w-auto">
+                <select class="bg-surface-container-low border-outline-variant rounded-lg text-body-md py-2 px-3 focus:ring-primary outline-none">
                     <option>Todas las Categorías</option>
                     <option>Limpieza</option>
                     <option>Alimentos</option>
                     <option>Bebidas</option>
                 </select>
-                <select class="bg-surface-container-low border-outline-variant rounded-lg text-body-md py-2 px-3 focus:ring-primary">
+                <select class="bg-surface-container-low border-outline-variant rounded-lg text-body-md py-2 px-3 focus:ring-primary outline-none">
                     <option>Todos los Estados</option>
                     <option>In Stock</option>
                     <option>Low Stock</option>
                     <option>Out of Stock</option>
                 </select>
             </div>
-            <div class="flex items-center gap-sm">
+            <div class="flex items-center gap-sm ms-auto sm:ms-0">
                 <button class="p-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-colors">
-                    <span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+                    <span class="material-symbols-outlined">filter_list</span>
                 </button>
                 <button class="p-2 border border-outline-variant rounded-lg hover:bg-surface-container transition-colors">
-                    <span class="material-symbols-outlined" data-icon="download">download</span>
+                    <span class="material-symbols-outlined">download</span>
                 </button>
             </div>
         </div>
@@ -96,8 +96,8 @@
                     <tr class="bg-surface-container/30 font-bold group cursor-pointer" onclick="this.classList.toggle('tree-row-expanded')">
                         <td class="px-md py-3" colspan="8">
                             <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined expand-icon transition-transform text-outline" data-icon="chevron_right">chevron_right</span>
-                                <span class="material-symbols-outlined text-primary" data-icon="liquor">liquor</span>
+                                <span class="material-symbols-outlined expand-icon transition-transform text-outline">chevron_right</span>
+                                <span class="material-symbols-outlined text-primary">liquor</span>
                                 Bebidas y Licores <span class="ml-2 font-normal text-on-surface-variant text-label-md">(24 productos)</span>
                             </div>
                         </td>
@@ -126,10 +126,10 @@
                             </div>
                         </td>
                         <td class="px-md py-3 text-right">
-                            <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button class="p-2 hover:bg-surface-container rounded-lg text-primary" title="Editar"><span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span></button>
-                                <button class="p-2 hover:bg-surface-container rounded-lg text-outline" title="Ver"><span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span></button>
-                                <button class="p-2 hover:bg-error-container/20 rounded-lg text-error" title="Eliminar"><span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span></button>
+                            <div class="flex items-center justify-end gap-1 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button class="p-2 hover:bg-surface-container rounded-lg text-primary" title="Editar"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+                                <button class="p-2 hover:bg-surface-container rounded-lg text-outline" title="Ver"><span class="material-symbols-outlined text-[20px]">visibility</span></button>
+                                <button class="p-2 hover:bg-error-container/20 rounded-lg text-error" title="Eliminar"><span class="material-symbols-outlined text-[20px]">delete</span></button>
                             </div>
                         </td>
                     </tr>
@@ -157,10 +157,10 @@
                             </div>
                         </td>
                         <td class="px-md py-3 text-right">
-                            <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button class="p-2 hover:bg-surface-container rounded-lg text-primary"><span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span></button>
-                                <button class="p-2 hover:bg-surface-container rounded-lg text-outline"><span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span></button>
-                                <button class="p-2 hover:bg-error-container/20 rounded-lg text-error"><span class="material-symbols-outlined text-[20px]" data-icon="delete">delete</span></button>
+                            <div class="flex items-center justify-end gap-1 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button class="p-2 hover:bg-surface-container rounded-lg text-primary"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+                                <button class="p-2 hover:bg-surface-container rounded-lg text-outline"><span class="material-symbols-outlined text-[20px]">visibility</span></button>
+                                <button class="p-2 hover:bg-error-container/20 rounded-lg text-error"><span class="material-symbols-outlined text-[20px]">delete</span></button>
                             </div>
                         </td>
                     </tr>
@@ -174,35 +174,37 @@
             </div>
             <div class="flex items-center gap-1">
                 <button class="p-2 border border-outline-variant rounded hover:bg-surface-container disabled:opacity-30" disabled>
-                    <span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+                    <span class="material-symbols-outlined">chevron_left</span>
                 </button>
                 <button class="px-4 py-2 bg-primary text-on-primary rounded font-bold">1</button>
                 <button class="px-4 py-2 hover:bg-surface-container rounded transition-colors">2</button>
                 <button class="p-2 border border-outline-variant rounded hover:bg-surface-container">
-                    <span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+                    <span class="material-symbols-outlined">chevron_right</span>
                 </button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="fixed inset-0 z-50 flex items-center justify-center bg-on-background/40 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300" id="product-modal">
-    <div class="bg-surface-container-lowest w-full max-w-2xl rounded-xl shadow-2xl scale-95 transition-transform duration-300 overflow-hidden">
-        <div class="p-lg border-b border-outline-variant flex items-center justify-between">
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-on-background/40 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 p-4" id="product-modal">
+    <div class="bg-surface-container-lowest w-full max-w-2xl rounded-xl shadow-2xl scale-95 transition-transform duration-300 overflow-hidden flex flex-col max-h-[calc(100vh-2rem)]">
+        
+        <div class="p-md sm:p-lg border-b border-outline-variant flex items-center justify-between shrink-0">
             <h3 class="font-headline-md text-headline-md">Nuevo Producto</h3>
-            <button class="p-2 hover:bg-surface-container rounded-full" onclick="toggleModal('product-modal')">
-                <span class="material-symbols-outlined" data-icon="close">close</span>
+            <button class="p-2 hover:bg-surface-container rounded-full transition-colors" onclick="toggleModal('product-modal')">
+                <span class="material-symbols-outlined">close</span>
             </button>
         </div>
-        <div class="p-lg max-h-[716px] overflow-y-auto custom-scrollbar">
-            <form class="grid grid-cols-2 gap-lg">
-                <div class="col-span-2">
+        
+        <div class="p-md sm:p-lg overflow-y-auto custom-scrollbar flex-1 max-h-[60vh] sm:max-h-[70vh]">
+            <form class="grid grid-cols-1 sm:grid-cols-2 gap-md sm:gap-lg">
+                <div class="sm:col-span-2">
                     <label class="block font-label-lg text-label-lg text-on-surface-variant mb-2">Nombre del Producto</label>
-                    <input class="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 focus:ring-primary" placeholder="Ej: Jabón Líquido Antibacterial" type="text"/>
+                    <input class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 focus:ring-2 focus:ring-primary outline-none transition-all" placeholder="Ej: Jabón Líquido Antibacterial" type="text"/>
                 </div>
                 <div>
                     <label class="block font-label-lg text-label-lg text-on-surface-variant mb-2">Categoría</label>
-                    <select class="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 focus:ring-primary">
+                    <select class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 focus:ring-2 focus:ring-primary outline-none transition-all">
                         <option>Limpieza</option>
                         <option>Bebidas</option>
                         <option>Alimentos</option>
@@ -210,32 +212,33 @@
                 </div>
                 <div>
                     <label class="block font-label-lg text-label-lg text-on-surface-variant mb-2">Código SKU</label>
-                    <input class="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 focus:ring-primary" placeholder="LIM-JAB-001" type="text"/>
+                    <input class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 focus:ring-2 focus:ring-primary outline-none transition-all" placeholder="LIM-JAB-001" type="text"/>
                 </div>
                 <div>
                     <label class="block font-label-lg text-label-lg text-on-surface-variant mb-2">Precio de Venta</label>
                     <div class="relative">
                         <span class="absolute left-3 top-3 text-outline">$</span>
-                        <input class="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 pl-8 focus:ring-primary" step="0.01" type="number"/>
+                        <input class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 pl-8 focus:ring-2 focus:ring-primary outline-none transition-all" step="0.01" type="number"/>
                     </div>
                 </div>
                 <div>
                     <label class="block font-label-lg text-label-lg text-on-surface-variant mb-2">Stock Inicial</label>
-                    <input class="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 focus:ring-primary" type="number"/>
+                    <input class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 focus:ring-2 focus:ring-primary outline-none transition-all" type="number"/>
                 </div>
-                <div>
+                <div class="sm:col-span-2">
                     <label class="block font-label-lg text-label-lg text-on-surface-variant mb-2">Punto de Re-orden (Mínimo)</label>
-                    <input class="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 focus:ring-primary" type="number"/>
+                    <input class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 focus:ring-2 focus:ring-primary outline-none transition-all" type="number"/>
                 </div>
-                <div class="col-span-2">
+                <div class="sm:col-span-2">
                     <label class="block font-label-lg text-label-lg text-on-surface-variant mb-2">Descripción</label>
-                    <textarea class="w-full bg-surface-container-low border-outline-variant rounded-lg p-3 focus:ring-primary" rows="3"></textarea>
+                    <textarea class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 focus:ring-2 focus:ring-primary outline-none transition-all" rows="3"></textarea>
                 </div>
             </form>
         </div>
-        <div class="p-lg bg-surface-container-low border-t border-outline-variant flex justify-end gap-md">
-            <button class="px-6 py-2 border border-outline-variant rounded-lg font-title-md hover:bg-surface-container transition-colors" onclick="toggleModal('product-modal')">Cancelar</button>
-            <button class="px-6 py-2 bg-primary text-on-primary rounded-lg font-title-md hover:shadow-lg transition-all active:scale-95">Guardar Producto</button>
+        
+        <div class="p-md sm:p-lg bg-surface-container-low border-t border-outline-variant flex justify-end gap-md shrink-0">
+            <button class="px-5 py-2 border border-outline-variant rounded-lg font-title-md hover:bg-surface-container transition-colors" onclick="toggleModal('product-modal')">Cancelar</button>
+            <button class="px-5 py-2 bg-primary text-on-primary rounded-lg font-title-md hover:shadow-lg transition-all active:scale-95">Guardar Producto</button>
         </div>
     </div>
 </div>
@@ -250,10 +253,12 @@
             modal.classList.remove('opacity-0', 'pointer-events-none');
             content.classList.remove('scale-95');
             content.classList.add('scale-100');
+            document.body.classList.add('overflow-hidden'); // Evita scroll de fondo
         } else {
             modal.classList.add('opacity-0', 'pointer-events-none');
             content.classList.remove('scale-100');
             content.classList.add('scale-95');
+            document.body.classList.remove('overflow-hidden');
         }
     }
 

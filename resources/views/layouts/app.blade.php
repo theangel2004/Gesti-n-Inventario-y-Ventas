@@ -160,8 +160,8 @@
                 <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
                 <span class="font-label-lg text-label-lg">Inventory</span>
             </a>
-            <a class="flex items-center gap-md text-secondary dark:text-secondary-fixed py-3 mx-2 px-4 hover:bg-surface-container-highest dark:hover:bg-surface-container hover:translate-x-1 transition-all duration-200" href="#">
-                <span class="material-symbols-outlined" data-icon="category">category</span>
+            <a class="flex items-center gap-md text-secondary dark:text-secondary-fixed py-3 mx-2 px-4 hover:bg-surface-container-highest dark:hover:bg-surface-container hover:translate-x-1 transition-all duration-200" href="{{ route('categories') }}">
+                <span class="material-symbols-outlined">category</span>
                 <span class="font-label-lg text-label-lg">Categories</span>
             </a>
             <a class="flex items-center gap-md py-3 mx-2 px-4 transition-all hover:translate-x-1 duration-200 {{ request()->routeIs('partners.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl' : 'text-secondary dark:text-secondary-fixed hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" 

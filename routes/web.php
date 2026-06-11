@@ -13,6 +13,8 @@ Route::get('/dashboard', function () {
 
 Route::view('/inventario', 'inventory')->name('inventory');
 
+Route::view('/categorias', 'categories')->name('categories');
+
 Route::view('/partners', 'partners')->name('partners.index');
 
 Route::view('/ventas', 'sales')->name('sales');
