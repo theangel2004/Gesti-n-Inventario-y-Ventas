@@ -2,14 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Categoria extends Model
 {
-    // Un mapa para saber qué productos tiene esta categoría
-    public function productos(): HasMany
+    use HasFactory;
+
+    protected $table = 'categorias';
+
+    protected $fillable = [
+        'nombre',
+        'descripcion',
+    ];
+
+    /**
+     * Relación: Una categoría tiene muchos productos.
+     */
+    public function productos()
     {
-        return $this->hasMany(Producto::class, 'categoria_id');
+        return $this->hasMany(Product::class, 'categoria_id');
     }
 }

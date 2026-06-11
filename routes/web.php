@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,7 +12,10 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::view('/inventario', 'inventory')->name('inventory');
+// --- AQUÍ ESTÁ EL CAMBIO: Se eliminó el Route::view viejo ---
+Route::get('/inventario', [ProductController::class, 'index'])->name('inventory'); // Le dejé el nombre 'inventory' por si lo usas en tu barra de navegación
+Route::post('/inventario', [ProductController::class, 'store'])->name('products.store');
+
 
 Route::view('/categorias', 'categories')->name('categories');
 
