@@ -4,12 +4,35 @@
 <div class="flex flex-col min-h-screen">
     <main class="p-margin-desktop flex-1 max-w-[1440px] w-full mx-auto space-y-xl">
         
+        {{-- SECCIÓN DE NOTIFICACIONES REALES DE LARAVEL --}}
+        @if(session('success'))
+            <div class="p-4 bg-tertiary-fixed text-on-tertiary-fixed-variant border border-outline-variant rounded-xl flex items-center gap-2 font-title-md">
+                <span class="material-symbols-outlined">check_circle</span>
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="p-4 bg-error-container text-on-error-container border border-outline-variant rounded-xl flex flex-col gap-1 font-body-md">
+                <div class="flex items-center gap-2 font-title-md mb-1">
+                    <span class="material-symbols-outlined">error</span>
+                    <span>Por favor corrige los siguientes errores:</span>
+                </div>
+                <ul class="list-disc list-inside pl-2 text-label-lg">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
             <div>
                 <h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Gestión de Categorías</h2>
                 <p class="font-body-md text-body-md text-on-surface-variant">Administra las clasificaciones de tus productos para un mejor control del catálogo.</p>
             </div>
-            <button class="bg-primary text-white flex items-center gap-sm px-lg py-3 rounded-xl font-title-md hover:opacity-90 active:scale-95 transition-all shadow-sm">
+            {{-- SE CONECTÓ EL EVENTO CLICK PARA ABRIR TU MODAL --}}
+            <button onclick="toggleModal('category-modal')" class="bg-primary text-white flex items-center gap-sm px-lg py-3 rounded-xl font-title-md hover:opacity-90 active:scale-95 transition-all shadow-sm">
                 <span class="material-symbols-outlined">add</span>
                 Nueva Categoría
             </button>
@@ -19,7 +42,7 @@
             <div class="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex items-center justify-between shadow-sm">
                 <div>
                     <p class="font-label-md text-label-md text-on-surface-variant mb-xs">Total Categorías</p>
-                    <p class="font-display text-display text-primary">12</p>
+                    <p class="font-display text-display text-primary">{{ $categorias->total() }}</p>
                 </div>
                 <div class="w-12 h-12 bg-primary-fixed rounded-full flex items-center justify-center text-on-primary-fixed">
                     <span class="material-symbols-outlined text-[28px]">category</span>
@@ -28,7 +51,7 @@
             <div class="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex items-center justify-between shadow-sm">
                 <div>
                     <p class="font-label-md text-label-md text-on-surface-variant mb-xs">Categorías Activas</p>
-                    <p class="font-display text-display text-on-tertiary-fixed-variant">10</p>
+                    <p class="font-display text-display text-on-tertiary-fixed-variant">{{ $categorias->total() }}</p>
                 </div>
                 <div class="w-12 h-12 bg-tertiary-fixed rounded-full flex items-center justify-center text-on-tertiary-fixed-variant">
                     <span class="material-symbols-outlined text-[28px]">check_circle</span>
@@ -37,7 +60,7 @@
             <div class="bg-surface-container-lowest border border-outline-variant p-lg rounded-xl flex items-center justify-between shadow-sm">
                 <div>
                     <p class="font-label-md text-label-md text-on-surface-variant mb-xs">Sin Productos</p>
-                    <p class="font-display text-display text-error">2</p>
+                    <p class="font-display text-display text-error">0</p>
                 </div>
                 <div class="w-12 h-12 bg-error-container rounded-full flex items-center justify-center text-on-error-container">
                     <span class="material-symbols-outlined text-[28px]">inventory_2</span>
@@ -82,136 +105,80 @@
                         </tr>
                     </thead>
                     <tbody class="text-on-background font-body-md">
-                        <tr class="group hover:bg-surface-container-low transition-colors border-b border-outline-variant">
-                            <td class="px-md py-4 font-tabular-nums text-primary font-bold">#CAT-01</td>
-                            <td class="px-md py-4">
-                                <div class="flex items-center gap-xs">
-                                    <span class="material-symbols-outlined text-outline cursor-pointer toggle-arrow">expand_more</span>
-                                    <span class="font-title-md">Bebidas</span>
-                                </div>
-                            </td>
-                            <td class="px-md py-4 text-on-surface-variant">Bebidas con y sin alcohol, jugos y aguas minerales</td>
-                            <td class="px-md py-4">45 productos</td>
-                            <td class="px-md py-4">
-                                <span class="px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-label-md rounded-full font-bold">ACTIVO</span>
-                            </td>
-                            <td class="px-md py-4 text-right">
-                                <div class="flex justify-end gap-xs md:opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
-                                        <span class="material-symbols-outlined text-[20px]">edit</span>
-                                    </button>
-                                    <button class="p-2 text-on-surface-variant hover:text-error transition-colors">
-                                        <span class="material-symbols-outlined text-[20px]">delete</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="group bg-surface-container-lowest hover:bg-surface-container-low transition-colors border-b border-outline-variant/30">
-                            <td class="px-md py-3 pl-8 font-tabular-nums text-outline-variant">#CAT-01-A</td>
-                            <td class="px-md py-3 tree-row-indent">
-                                <div class="flex items-center gap-xs">
-                                    <span class="material-symbols-outlined text-outline/30 text-[18px]">subdirectory_arrow_right</span>
-                                    <span>Aguas</span>
-                                </div>
-                            </td>
-                            <td class="px-md py-3 text-on-surface-variant/80 italic">Natural, con gas y saborizadas</td>
-                            <td class="px-md py-3">12 productos</td>
-                            <td class="px-md py-3">
-                                <span class="px-2 py-0.5 bg-tertiary-fixed/40 text-on-tertiary-fixed-variant text-[10px] rounded-full font-bold">ACTIVO</span>
-                            </td>
-                            <td class="px-md py-3 text-right">
-                                <button class="p-1 text-on-surface-variant hover:text-primary transition-colors">
-                                    <span class="material-symbols-outlined text-[18px]">edit</span>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr class="group hover:bg-surface-container-low transition-colors border-b border-outline-variant">
-                            <td class="px-md py-4 font-tabular-nums text-primary font-bold">#CAT-02</td>
-                            <td class="px-md py-4">
-                                <div class="flex items-center gap-xs">
-                                    <span class="material-symbols-outlined text-outline cursor-pointer toggle-arrow">chevron_right</span>
-                                    <span class="font-title-md">Lácteos</span>
-                                </div>
-                            </td>
-                            <td class="px-md py-4 text-on-surface-variant">Leches, quesos, yogures y derivados de origen animal</td>
-                            <td class="px-md py-4">32 productos</td>
-                            <td class="px-md py-4">
-                                <span class="px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-label-md rounded-full font-bold">ACTIVO</span>
-                            </td>
-                            <td class="px-md py-4 text-right">
-                                <div class="flex justify-end gap-xs md:opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
-                                        <span class="material-symbols-outlined text-[20px]">edit</span>
-                                    </button>
-                                    <button class="p-2 text-on-surface-variant hover:text-error transition-colors">
-                                        <span class="material-symbols-outlined text-[20px]">delete</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="group hover:bg-surface-container-low transition-colors border-b border-outline-variant">
-                            <td class="px-md py-4 font-tabular-nums text-primary font-bold">#CAT-03</td>
-                            <td class="px-md py-4">
-                                <div class="flex items-center gap-xs">
-                                    <span class="material-symbols-outlined text-outline cursor-pointer toggle-arrow">chevron_right</span>
-                                    <span class="font-title-md">Abarrotes</span>
-                                </div>
-                            </td>
-                            <td class="px-md py-4 text-on-surface-variant">Arroz, legumbres, pastas y productos no perecederos</td>
-                            <td class="px-md py-4">156 productos</td>
-                            <td class="px-md py-4">
-                                <span class="px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-label-md rounded-full font-bold">ACTIVO</span>
-                            </td>
-                            <td class="px-md py-4 text-right">
-                                <div class="flex justify-end gap-xs md:opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
-                                        <span class="material-symbols-outlined text-[20px]">edit</span>
-                                    </button>
-                                    <button class="p-2 text-on-surface-variant hover:text-error transition-colors">
-                                        <span class="material-symbols-outlined text-[20px]">delete</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="group hover:bg-surface-container-low transition-colors border-b border-outline-variant">
-                            <td class="px-md py-4 font-tabular-nums text-primary font-bold">#CAT-04</td>
-                            <td class="px-md py-4">
-                                <div class="flex items-center gap-xs">
-                                    <span class="material-symbols-outlined text-outline cursor-pointer toggle-arrow">chevron_right</span>
-                                    <span class="font-title-md">Limpieza</span>
-                                </div>
-                            </td>
-                            <td class="px-md py-4 text-on-surface-variant">Detergentes, desinfectantes y artículos de aseo</td>
-                            <td class="px-md py-4 text-error">0 productos</td>
-                            <td class="px-md py-4">
-                                <span class="px-2 py-1 bg-surface-variant text-on-surface-variant text-label-md rounded-full font-bold">INACTIVO</span>
-                            </td>
-                            <td class="px-md py-4 text-right">
-                                <div class="flex justify-end gap-xs md:opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
-                                        <span class="material-symbols-outlined text-[20px]">edit</span>
-                                    </button>
-                                    <button class="p-2 text-on-surface-variant hover:text-error transition-colors">
-                                        <span class="material-symbols-outlined text-[20px]">delete</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                        @forelse($categorias as $categoria)
+                            <tr class="group hover:bg-surface-container-low transition-colors border-b border-outline-variant">
+                                <td class="px-md py-4 font-tabular-nums text-primary font-bold">#CAT-{{ sprintf('%02d', $categoria->id) }}</td>
+                                <td class="px-md py-4">
+                                    <div class="flex items-center gap-xs">
+                                        <span class="material-symbols-outlined text-outline cursor-pointer toggle-arrow">expand_more</span>
+                                        <span class="font-title-md">{{ $categoria->nombre }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-md py-4 text-on-surface-variant">
+                                    {{ $categoria->descripcion ?? 'Sin descripción disponible' }}
+                                </td>
+                                <td class="px-md py-4 text-on-surface-variant">0 productos</td>
+                                <td class="px-md py-4">
+                                    <span class="px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-label-md rounded-full font-bold">ACTIVO</span>
+                                </td>
+                                <td class="px-md py-4 text-right">
+                                    <div class="flex justify-end gap-xs md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+                                            <span class="material-symbols-outlined text-[20px]">edit</span>
+                                        </button>
+                                        <button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+                                            <span class="material-symbols-outlined text-[20px]">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="px-md py-8 text-center text-on-surface-variant font-body-md">
+                                    No hay categorías registradas en el sistema.
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
 
+            {{-- SISTEMA DE PAGINACIÓN DINÁMICO REFACTORIZADO CON TU DISEÑO --}}
             <div class="bg-white border border-outline-variant rounded-b-xl p-md flex flex-col md:flex-row justify-between items-center gap-md">
-                <span class="font-body-md text-on-surface-variant">Mostrando 1-10 de 12 categorías</span>
+                <span class="font-body-md text-on-surface-variant">
+                    Mostrando {{ $categorias->firstItem() ?? 0 }}-{{ $categorias->lastItem() ?? 0 }} de {{ $categorias->total() }} categorías
+                </span>
                 <div class="flex items-center gap-xs">
-                    <button class="w-10 h-10 flex items-center justify-center border border-outline-variant rounded-lg text-outline-variant cursor-not-allowed">
-                        <span class="material-symbols-outlined">chevron_left</span>
-                    </button>
-                    <button class="w-10 h-10 flex items-center justify-center bg-primary text-white rounded-lg font-label-lg">1</button>
-                    <button class="w-10 h-10 flex items-center justify-center border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors font-label-lg">2</button>
-                    <button class="w-10 h-10 flex items-center justify-center border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors text-on-surface-variant">
-                        <span class="material-symbols-outlined">chevron_right</span>
-                    </button>
+                    {{-- Botón Anterior --}}
+                    @if ($categorias->onFirstPage())
+                        <button class="w-10 h-10 flex items-center justify-center border border-outline-variant rounded-lg text-outline-variant cursor-not-allowed" disabled>
+                            <span class="material-symbols-outlined">chevron_left</span>
+                        </button>
+                    @else
+                        <a href="{{ $categorias->previousPageUrl() }}" class="w-10 h-10 flex items-center justify-center border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors text-on-surface-variant">
+                            <span class="material-symbols-outlined">chevron_left</span>
+                        </a>
+                    @endif
+
+                    {{-- Números de Páginas --}}
+                    @foreach ($categorias->getUrlRange(max(1, $categorias->currentPage() - 1), min($categorias->lastPage(), $categorias->currentPage() + 1)) as $page => $url)
+                        @if ($page == $categorias->currentPage())
+                            <button class="w-10 h-10 flex items-center justify-center bg-primary text-white rounded-lg font-label-lg">{{ $page }}</button>
+                        @else
+                            <a href="{{ $url }}" class="w-10 h-10 flex items-center justify-center border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors font-label-lg">{{ $page }}</a>
+                        @endif
+                    @endforeach
+
+                    {{-- Botón Siguiente --}}
+                    @if ($categorias->hasMorePages())
+                        <a href="{{ $categorias->nextPageUrl() }}" class="w-10 h-10 flex items-center justify-center border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors text-on-surface-variant">
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </a>
+                    @else
+                        <button class="w-10 h-10 flex items-center justify-center border border-outline-variant rounded-lg text-outline-variant cursor-not-allowed" disabled>
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -221,7 +188,7 @@
                 <span class="material-symbols-outlined text-primary text-[32px]">info</span>
                 <div>
                     <h4 class="font-title-lg text-title-lg text-primary mb-xs">Optimizacion de Inventario</h4>
-                    <p class="font-body-md text-body-md text-on-surface-variant">Recuerda que las categorías sin productos activos no aparecerán en la aplicación móvil de ventas para evitar confusiones en los pedidos.</p>
+                    <p class="font-body-md text-body-md text-on-surface-variant">Recuerda que las categorías sin productos activos no aparecerán en la application móvil de ventas para evitar confusiones en los pedidos.</p>
                 </div>
             </div>
             <div class="relative overflow-hidden rounded-2xl h-40 group border border-outline-variant shadow-sm">
@@ -232,6 +199,40 @@
             </div>
         </div>
     </main>
+</div>
+
+{{-- NUEVO: MODAL DE REGISTRO CONSTRUIDO CON TUS MISMOS ESTILOS Y CLASES --}}
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-on-surface/40 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 p-4" id="category-modal">
+    <div class="bg-white border border-outline-variant w-full max-w-md rounded-xl shadow-2xl scale-95 transition-transform duration-300 overflow-hidden flex flex-col">
+        
+        <div class="p-md border-b border-outline-variant flex items-center justify-between">
+            <h3 class="font-headline-md text-headline-md text-on-surface">Nueva Categoría</h3>
+            <button class="p-2 hover:bg-surface-container-low rounded-full transition-colors" onclick="toggleModal('category-modal')">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        
+        <form action="{{ route('categories.store') }}" method="POST" class="flex flex-col">
+            @csrf
+
+            <div class="p-md flex flex-col gap-md">
+                <div>
+                    <label class="block font-label-lg text-label-lg text-on-surface-variant mb-2">Nombre de la Categoría</label>
+                    <input name="nombre" value="{{ old('nombre') }}" class="w-full px-4 py-2 text-body-md border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container outline-none transition-all" placeholder="Ej: Bebidas, Lácteos, Abarrotes" type="text" required/>
+                </div>
+
+                <div>
+                    <label class="block font-label-lg text-label-lg text-on-surface-variant mb-2">Descripción (Opcional)</label>
+                    <textarea name="descripcion" class="w-full px-4 py-2 text-body-md border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container outline-none transition-all" rows="4" placeholder="Ingresa una breve descripción de la categoría...">{{ old('descripcion') }}</textarea>
+                </div>
+            </div>
+            
+            <div class="p-md bg-surface-container-low border-t border-outline-variant flex justify-end gap-md">
+                <button type="button" class="px-md py-2 border border-outline-variant rounded-lg font-label-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" onclick="toggleModal('category-modal')">Cancelar</button>
+                <button type="submit" class="bg-primary text-white px-lg py-2 rounded-lg font-title-md hover:opacity-90 active:scale-95 transition-all shadow-sm">Guardar Categoría</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script>
@@ -247,5 +248,22 @@
             });
         });
     });
+
+    // Función fluida para abrir y cerrar el modal respetando tu jerarquía
+    function toggleModal(id) {
+        const modal = document.getElementById(id);
+        const content = modal.querySelector('div');
+        if (modal.classList.contains('opacity-0')) {
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+            document.body.classList.add('overflow-hidden');
+        } else {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            document.body.classList.remove('overflow-hidden');
+        }
+    }
 </script>
 @endsection

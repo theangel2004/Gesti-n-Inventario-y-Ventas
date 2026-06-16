@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProveedorController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,9 +19,12 @@ Route::get('/inventario', [ProductController::class, 'index'])->name('inventory'
 Route::post('/inventario', [ProductController::class, 'store'])->name('products.store');
 
 
-Route::view('/categorias', 'categories')->name('categories');
+// Rutas dedicadas a la Gestión de Categorías
+Route::get('/categorias', [CategoryController::class, 'index'])->name('categories.index');
+Route::post('/categorias/store', [CategoryController::class, 'store'])->name('categories.store');
 
-Route::view('/partners', 'partners')->name('partners.index');
+Route::get('/partners', [ProveedorController::class, 'index'])->name('partners.index');
+Route::post('/partners/store', [ProveedorController::class, 'store'])->name('partners.store');
 
 Route::view('/ventas', 'sales')->name('sales');
 

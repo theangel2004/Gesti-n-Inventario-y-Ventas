@@ -150,7 +150,7 @@
             </div>
         </div>
         
-        <nav class="flex-1 flex flex-col gap-1">
+<nav class="flex-1 flex flex-col gap-1">
             <a class="flex items-center gap-md {{ Request::routeIs('dashboard') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed' : 'text-secondary dark:text-secondary-fixed' }} rounded-xl mx-2 py-3 px-4 hover:translate-x-1 transition-all duration-200" href="{{ route('dashboard') }}">
                 <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
                 <span class="font-label-lg text-label-lg">Dashboard</span>
@@ -160,10 +160,14 @@
                 <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
                 <span class="font-label-lg text-label-lg">Inventory</span>
             </a>
-            <a class="flex items-center gap-md text-secondary dark:text-secondary-fixed py-3 mx-2 px-4 hover:bg-surface-container-highest dark:hover:bg-surface-container hover:translate-x-1 transition-all duration-200" href="{{ route('categories') }}">
+            
+            {{-- SE CORRIGIÓ EL NOMBRE A 'categories.index' Y SE AÑADIÓ LA CLASE ACTIVA DE TU DISEÑO --}}
+            <a class="flex items-center gap-md py-3 mx-2 px-4 transition-all hover:translate-x-1 duration-200 {{ Request::routeIs('categories.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl' : 'text-secondary dark:text-secondary-fixed hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" 
+            href="{{ route('categories.index') }}">
                 <span class="material-symbols-outlined">category</span>
                 <span class="font-label-lg text-label-lg">Categories</span>
             </a>
+            
             <a class="flex items-center gap-md py-3 mx-2 px-4 transition-all hover:translate-x-1 duration-200 {{ request()->routeIs('partners.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl' : 'text-secondary dark:text-secondary-fixed hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" 
             href="{{ route('partners.index') }}">
                 <span class="material-symbols-outlined" data-icon="group">group</span>
