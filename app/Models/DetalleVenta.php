@@ -7,16 +7,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DetalleVenta extends Model
 {
-    // Laravel por defecto busca el plural, le aclaramos el nombre exacto de la tabla
     protected $table = 'detalle_ventas';
 
-    public function venta(): BelongsTo
-    {
-        return $this->belongsTo(Venta::class, 'venta_id');
-    }
+    protected $fillable = [
+        'venta_id',
+        'producto_id',
+        'cantidad',
+        'precio_unitario'
+    ];
 
     public function producto(): BelongsTo
     {
         return $this->belongsTo(Producto::class, 'producto_id');
+    }
+
+    public function venta(): BelongsTo
+    {
+        return $this->belongsTo(Venta::class, 'venta_id');
     }
 }

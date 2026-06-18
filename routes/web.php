@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\VentaController;
+use App\Http\Controllers\ReporteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,10 +27,13 @@ Route::post('/categorias/store', [CategoryController::class, 'store'])->name('ca
 
 Route::get('/partners', [ProveedorController::class, 'index'])->name('partners.index');
 Route::post('/partners/store', [ProveedorController::class, 'store'])->name('partners.store');
+Route::put('/partners/{id}', [ProveedorController::class, 'update'])->name('partners.update');
+Route::delete('/partners/{id}', [ProveedorController::class, 'destroy'])->name('partners.destroy');
 
-Route::view('/ventas', 'sales')->name('sales');
+Route::get('/ventas', [VentaController::class, 'index'])->name('sales.index');
+Route::post('/ventas/store', [VentaController::class, 'store'])->name('sales.store');
 
-Route::view('/reportes', 'reports')->name('reports');
+Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

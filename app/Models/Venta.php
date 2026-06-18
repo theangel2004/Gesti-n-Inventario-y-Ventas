@@ -8,12 +8,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Venta extends Model
 {
+    // Habilitamos las columnas para poder guardar la venta desde el controlador
+    protected $fillable = [
+        'numero_factura',
+        'fecha_venta',
+        'total',
+        'metodo_pago',
+        'estado',
+        'cliente_id'
+    ];
+
     public function cliente(): BelongsTo
     {
         return $this->belongsTo(Cliente::class, 'cliente_id');
     }
 
-    // Una venta tiene muchos artículos en su factura
     public function detalles(): HasMany
     {
         return $this->hasMany(DetalleVenta::class, 'venta_id');

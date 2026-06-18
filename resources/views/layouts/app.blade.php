@@ -173,16 +173,15 @@
                 <span class="material-symbols-outlined" data-icon="group">group</span>
                 <span class="font-label-lg text-label-lg">Partners</span>
             </a>
-            <a class="flex items-center gap-md py-3 mx-2 px-4 transition-all duration-200 hover:translate-x-1 {{ request()->routeIs('sales') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl' : 'text-secondary dark:text-secondary-fixed hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" href="{{ route('sales') }}">
-                <span class="material-symbols-outlined" style="{{ request()->routeIs('sales') ? 'font-variation-settings: \'FILL\' 1;' : '' }}">point_of_sale</span>
-                <span class="font-label-lg text-label-lg">Sales</span>
-            </a>
-            <a class="py-3 mx-2 font-label-lg text-label-lg transition-all hover:translate-x-1 flex items-center px-md gap-md {{ request()->routeIs('reports') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl font-bold' : 'text-secondary hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" 
-            href="{{ route('reports') }}">
+                <a class="flex items-center gap-md py-3 mx-2 px-4 transition-all duration-200 hover:translate-x-1 {{ request()->routeIs('sales.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl' : 'text-secondary dark:text-secondary-fixed hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" href="{{ route('sales.index') }}">
+                    <span class="material-symbols-outlined" style="{{ request()->routeIs('sales.index') ? 'font-variation-settings: \'FILL\' 1;' : '' }}">point_of_sale</span>
+                    <span class="font-label-lg text-label-lg">Sales</span>
+                </a>
+            <a class="py-3 mx-2 font-label-lg text-label-lg transition-all hover:translate-x-1 flex items-center px-md gap-md {{ request()->routeIs('reportes.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl font-bold' : 'text-secondary hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" 
+            href="{{ route('reportes.index') }}">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assessment</span>
                 <span>Reports</span>
             </a>
-        </nav>
 
         <div class="mt-auto border-t border-outline-variant pt-md flex flex-col gap-1">
             <a class="flex items-center gap-md text-secondary dark:text-secondary-fixed py-3 mx-2 px-4 hover:bg-surface-container-highest dark:hover:bg-surface-container transition-all" href="#">

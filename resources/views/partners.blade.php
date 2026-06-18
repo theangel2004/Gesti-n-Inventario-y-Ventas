@@ -6,7 +6,7 @@
         <div>
             <h2 class="font-display text-display text-primary dark:text-primary-fixed-dim">Socios de Negocio</h2>
             <div class="flex gap-lg mt-md">
-                {{-- Navegación limpia de pestañas mediante parámetros de URL --}}
+                {{-- Enlaces limpios que conservan los estilos exactos de tus pestañas --}}
                 <a href="{{ route('partners.index', ['type' => 'clientes']) }}" class="px-md py-2 font-title-md text-title-md transition-all {{ $currentType === 'clientes' ? 'tab-active' : 'text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim' }}" id="tab-clientes">Clientes</a>
                 <a href="{{ route('partners.index', ['type' => 'proveedores']) }}" class="px-md py-2 font-title-md text-title-md transition-all {{ $currentType === 'proveedores' ? 'tab-active' : 'text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim' }}" id="tab-proveedores">Proveedores</a>
             </div>
@@ -17,17 +17,17 @@
         </button>
     </div>
 
-    {{-- Tarjetas con datos reales --}}
+    {{-- Tarjetas Conectadas con Datos de Ambos Modelos --}}
     <div class="grid grid-cols-1 md:grid-cols-4 gap-md">
         <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col gap-xs shadow-sm">
             <span class="text-outline font-label-lg text-label-lg uppercase">Total Registros</span>
             <span class="font-headline-lg text-headline-lg text-primary dark:text-primary-fixed-dim">{{ $totalRegistros }}</span>
-            <span class="text-on-tertiary-container font-label-md flex items-center gap-xs"><span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span> Base General</span>
+            <span class="text-on-tertiary-container font-label-md flex items-center gap-xs"><span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span> Clientes + Prov</span>
         </div>
         <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col gap-xs shadow-sm">
             <span class="text-outline font-label-lg text-label-lg uppercase">Activos</span>
             <span class="font-headline-lg text-headline-lg text-primary dark:text-primary-fixed-dim">{{ $totalActivos }}</span>
-            <span class="text-outline font-label-md">En operación</span>
+            <span class="text-outline font-label-md">Base total unificada</span>
         </div>
         <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col gap-xs shadow-sm">
             <span class="text-outline font-label-lg text-label-lg uppercase">Nuevos (30d)</span>
@@ -53,7 +53,7 @@
                     </select>
                 </div>
             </div>
-            <p class="text-outline text-label-md">Mostrando {{ $proveedores->firstItem() ?? 0 }}-{{ $proveedores->lastItem() ?? 0 }} de {{ $proveedores->total() }} resultados</p>
+            <p class="text-outline text-label-md">Mostrando {{ $records->firstItem() ?? 0 }}-{{ $records->lastItem() ?? 0 }} de {{ $records->total() }} resultados</p>
         </div>
         <div class="overflow-x-auto custom-scrollbar">
             <table class="w-full text-left border-collapse">
@@ -69,59 +69,100 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant" id="table-body">
-                    @if($currentType === 'proveedores')
-                        @forelse($proveedores as $proveedor)
-                            <tr class="hover:bg-surface-container-low transition-colors group">
-                                <td class="p-md font-tabular-nums text-tabular-nums text-on-surface">#P-{{ $proveedor->id }}</td>
-                                <td class="p-md">
-                                    <div class="flex flex-col">
-                                        <span class="font-title-md text-title-md text-primary dark:text-primary-fixed-dim">{{ $proveedor->nombre }}</span>
-                                        <span class="text-label-md text-outline">{{ $proveedor->direccion ?? 'Sin dirección' }}</span>
-                                    </div>
-                                </td>
-                                {{-- Usamos los nombres de columna reales de tu migración --}}
-                                <td class="p-md font-tabular-nums text-tabular-nums">{{ $proveedor->nit_fiscal ?? 'N/A' }}</td>
-                                <td class="p-md font-body-md text-body-md">{{ $proveedor->contacto_nombre ?? 'N/A' }}</td>
-                                <td class="p-md font-tabular-nums text-tabular-nums">{{ $proveedor->telefono }}</td>
-                                <td class="p-md">
-                                    <span class="inline-flex items-center gap-xs px-2 py-0.5 rounded-full bg-tertiary-fixed text-tertiary font-label-md">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Activo
+                    @forelse($records as $row)
+                        <tr class="hover:bg-surface-container-low transition-colors group">
+                            {{-- 1. Identificador con prefijo dinámico --}}
+                            <td class="p-md font-tabular-nums text-tabular-nums text-on-surface">
+                                #{{ $currentType === 'clientes' ? 'C' : 'P' }}-{{ $row->id }}
+                            </td>
+                            
+                            {{-- 2. Nombre y Dirección --}}
+                            <td class="p-md">
+                                <div class="flex flex-col">
+                                    <span class="font-title-md text-title-md text-primary dark:text-primary-fixed-dim">
+                                        {{ $currentType === 'clientes' ? $row->nombre_tienda : $row->nombre }}
                                     </span>
-                                </td>
-                                <td class="p-md text-right">
-                                    <div class="flex justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button class="p-2 text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined" data-icon="edit">edit</span></button>
-                                        <button class="p-2 text-outline hover:text-error transition-colors"><span class="material-symbols-outlined" data-icon="delete">delete</span></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="p-md text-center text-outline font-body-md">No hay proveedores registrados.</td>
-                            </tr>
-                        @endforelse
-                    @else
-                        {{-- Espacio limpio reservado para cuando implementes tu modelo de Clientes --}}
-                        <tr>
-                            <td colspan="7" class="p-md text-center text-outline font-body-md">Módulo de clientes listo para conectar. Selecciona la pestaña "Proveedores" para ver datos reales.</td>
+                                    <span class="text-label-md text-outline">
+                                        {{ $row->direccion ?? 'Sin dirección' }}
+                                    </span>
+                                </div>
+                            </td>
+                            
+                            {{-- 3. Documento Fiscal / NIT --}}
+                            <td class="p-md font-tabular-nums text-tabular-nums">
+                                {{ $currentType === 'clientes' ? $row->nit_cc : ($row->nit_fiscal ?? 'N/A') }}
+                            </td>
+                            
+                            {{-- 4. Contacto Principal --}}
+                            <td class="p-md font-body-md text-body-md">
+                                {{ $currentType === 'clientes' ? ($row->nombre_contacto ?? 'N/A') : ($row->contacto_nombre ?? 'N/A') }}
+                            </td>
+                            
+                            {{-- 5. Teléfono --}}
+                            <td class="p-md font-tabular-nums text-tabular-nums">
+                                {{ $row->telefono }}
+                            </td>
+                            
+                            {{-- 6. Estado --}}
+                            <td class="p-md">
+                                <span class="inline-flex items-center gap-xs px-2 py-0.5 rounded-full bg-tertiary-fixed text-tertiary font-label-md">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Activo
+                                </span>
+                            </td>
+                            
+                            {{-- 7. Acciones --}}
+                            <td class="p-md text-right">
+                                <div class="flex justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                    {{-- Botón Editar --}}
+                                    <button type="button" class="p-2 text-outline hover:text-primary transition-colors"
+                                            onclick="openEditPanel({
+                                                id: '{{ $row->id }}',
+                                                nombre: '{{ $currentType === 'clientes' ? $row->nombre_tienda : $row->nombre }}',
+                                                nit: '{{ $currentType === 'clientes' ? $row->nit_cc : ($row->nit_fiscal ?? '') }}',
+                                                direccion: '{{ $row->direccion ?? '' }}',
+                                                telefono: '{{ $row->telefono }}',
+                                                email: '{{ $row->email ?? '' }}',
+                                                contacto: '{{ $currentType === 'clientes' ? $row->nombre_contacto : ($row->contacto_nombre ?? '') }}',
+                                                tipo: '{{ $currentType === 'clientes' ? 'Cliente' : 'Proveedor' }}'
+                                            })">
+                                        <span class="material-symbols-outlined" data-icon="edit">edit</span>
+                                    </button>
+
+                                    {{-- Formulario para Botón Eliminar --}}
+                                    <form action="{{ route('partners.destroy', $row->id) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de eliminar este registro?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="hidden" name="tipo" value="{{ $currentType }}">
+                                        <button type="submit" class="p-2 text-outline hover:text-error transition-colors">
+                                            <span class="material-symbols-outlined" data-icon="delete">delete</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
-                    @endif
+                    @empty
+                        <tr>
+                            <td colspan="7" class="p-md text-center text-outline font-body-md">
+                                No hay {{ $currentType }} registrados en la base de datos.
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
         
-        {{-- Paginación real integrada --}}
+        {{-- Paginación real unificada --}}
         <div class="p-md bg-surface-container-low border-t border-outline-variant flex justify-center gap-sm">
-            @if ($proveedores->onFirstPage())
+            @if ($records->onFirstPage())
                 <button class="p-1 rounded text-outline-variant cursor-not-allowed" disabled><span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span></button>
             @else
-                <a href="{{ $proveedores->appends(['type' => $currentType])->previousPageUrl() }}" class="p-1 rounded hover:bg-surface-container-highest transition-colors flex items-center"><span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span></a>
+                <a href="{{ $records->appends(['type' => $currentType])->previousPageUrl() }}" class="p-1 rounded hover:bg-surface-container-highest transition-colors flex items-center"><span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span></a>
             @endif
 
-            <button class="px-3 py-1 bg-primary text-on-primary rounded font-label-md">{{ $proveedores->currentPage() }}</button>
+            <button class="px-3 py-1 bg-primary text-on-primary rounded font-label-md">{{ $records->currentPage() }}</button>
 
-            @if ($proveedores->hasMorePages())
-                <a href="{{ $proveedores->appends(['type' => $currentType])->nextPageUrl() }}" class="p-1 rounded hover:bg-surface-container-highest transition-colors flex items-center"><span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span></a>
+            @if ($records->hasMorePages())
+                <a href="{{ $records->appends(['type' => $currentType])->nextPageUrl() }}" class="p-1 rounded hover:bg-surface-container-highest transition-colors flex items-center"><span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span></a>
             @else
                 <button class="p-1 rounded text-outline-variant cursor-not-allowed" disabled><span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span></button>
             @endif
@@ -129,7 +170,7 @@
     </div>
 </div>
 
-{{-- PANEL LATERAL CON ACCIÓN FORMULARIO --}}
+{{-- PANEL LATERAL --}}
 <div class="fixed inset-y-0 right-0 w-full sm:w-[450px] bg-surface-container-lowest shadow-2xl z-[100] transform translate-x-full transition-transform duration-300 ease-in-out border-l border-outline-variant" id="side-panel">
     <div class="h-full flex flex-col">
         <div class="p-lg border-b border-outline-variant flex justify-between items-center bg-primary text-on-primary">
@@ -142,9 +183,12 @@
             </button>
         </div>
         
-        {{-- Formulario apuntando a la ruta store --}}
         <form action="{{ route('partners.store') }}" method="POST" id="partner-form" class="flex-grow overflow-y-auto p-lg flex flex-col gap-lg custom-scrollbar">
             @csrf
+            {{-- Inputs de control dinámico --}}
+            <input type="hidden" name="_method" id="form-method" value="POST">
+            <input type="hidden" id="record-id">
+            
             <div class="space-y-md">
                 <h4 class="font-label-lg text-label-lg text-outline uppercase border-b border-outline-variant pb-xs">Identificación</h4>
                 <div class="grid grid-cols-1 gap-md">
@@ -154,7 +198,7 @@
                     </div>
                     <div class="flex flex-col gap-xs">
                         <label class="font-label-md text-label-md text-on-surface-variant">NIT / ID Fiscal</label>
-                        <input name="nit_fiscal" class="border border-outline-variant rounded-lg p-sm text-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="000.000.000-0" type="text"/>
+                        <input name="nit_fiscal" class="border border-outline-variant rounded-lg p-sm text-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="000.000.000-0" type="text" required/>
                     </div>
                 </div>
             </div>
@@ -162,7 +206,7 @@
                 <h4 class="font-label-lg text-label-lg text-outline uppercase border-b border-outline-variant pb-xs">Contacto y Ubicación</h4>
                 <div class="flex flex-col gap-xs">
                     <label class="font-label-md text-label-md text-on-surface-variant">Dirección Principal</label>
-                    <input name="direccion" class="border border-outline-variant rounded-lg p-sm text-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Calle 123 #45-67, Ciudad" type="text"/>
+                    <input name="direccion" class="border border-outline-variant rounded-lg p-sm text-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Calle 123 #45-67, Ciudad" type="text" required/>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
                     <div class="flex flex-col gap-xs">
@@ -176,9 +220,8 @@
                 </div>
             </div>
             
-            {{-- Mapeamos el campo de contacto_nombre en el input libre --}}
             <div class="space-y-md">
-                <h4 class="font-label-lg text-label-lg text-outline uppercase border-b border-outline-variant pb-xs">Contacto Principal</h4>
+                <h4 class="font-label-lg text-label-lg text-outline uppercase border-b border-outline-variant pb-xs">Contacto Principal (Opcional en Clientes)</h4>
                 <div class="flex flex-col gap-xs">
                     <label class="font-label-md text-label-md text-on-surface-variant">Nombre del Encargado</label>
                     <input name="contacto_nombre" class="border border-outline-variant rounded-lg p-sm text-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Ej: Carlos Mendoza" type="text"/>
@@ -209,8 +252,8 @@
         <div class="p-lg bg-surface-container-low border-t border-outline-variant flex flex-col gap-sm">
             <button type="submit" form="partner-form" class="w-full bg-primary text-on-primary py-md rounded-xl font-title-md hover:bg-primary-container transition-all active:scale-[0.98]">Guardar Registro</button>
             <div class="grid grid-cols-2 gap-sm">
-                <button class="bg-surface-container-lowest border border-outline text-on-surface-variant py-sm rounded-xl font-label-lg hover:bg-surface-container-high transition-all">Actualizar</button>
-                <button class="bg-error-container text-on-error-container py-sm rounded-xl font-label-lg hover:bg-error/10 transition-all">Eliminar</button>
+                <button type="button" onclick="form.submit();" class="bg-surface-container-lowest border border-outline text-on-surface-variant py-sm rounded-xl font-label-lg hover:bg-surface-container-high transition-all">Actualizar</button>
+                <button type="button" onclick="toggleSidePanel(false);" class="bg-error-container text-on-error-container py-sm rounded-xl font-label-lg hover:bg-error/10 transition-all">Cancelar</button>
             </div>
         </div>
     </div>
@@ -221,6 +264,10 @@
 
 @push('scripts')
 <script>
+    const form = document.getElementById('partner-form');
+    const methodInput = document.getElementById('form-method');
+    const panelTitle = document.querySelector('#side-panel h3');
+
     function toggleSidePanel(isOpen) {
         const panel = document.getElementById('side-panel');
         const overlay = document.getElementById('panel-overlay');
@@ -230,7 +277,37 @@
         } else {
             panel.classList.add('translate-x-full');
             overlay.classList.add('opacity-0', 'pointer-events-none');
+            // Espera a que termine la animación para resetear el panel al estado inicial (Crear)
+            setTimeout(resetFormToCreate, 300);
         }
+    }
+
+    function openEditPanel(data) {
+        // 1. Cambiamos título y simulamos método PUT para Laravel
+        panelTitle.innerText = "Editar Registro";
+        methodInput.value = "PUT";
+        
+        // 2. Apuntamos el action hacia la ruta update dinámica
+        form.action = `/partners/${data.id}`;
+
+        // 3. Rellenamos cada input con el mapeo correcto
+        form.querySelector('input[name="nombre"]').value = data.nombre;
+        form.querySelector('input[name="nit_fiscal"]').value = data.nit;
+        form.querySelector('input[name="direccion"]').value = data.direccion;
+        form.querySelector('input[name="telefono"]').value = data.telefono;
+        form.querySelector('input[name="email"]').value = data.email;
+        form.querySelector('input[name="contacto_nombre"]').value = data.contacto;
+        form.querySelector('select[name="tipo"]').value = data.tipo;
+
+        // 4. Mostramos el panel
+        toggleSidePanel(true);
+    }
+
+    function resetFormToCreate() {
+        panelTitle.innerText = "Nuevo Registro";
+        methodInput.value = "POST";
+        form.action = "{{ route('partners.store') }}";
+        form.reset();
     }
 </script>
 @endpush
