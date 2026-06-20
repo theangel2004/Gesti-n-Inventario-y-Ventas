@@ -31,8 +31,7 @@
                 <h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Gestión de Categorías</h2>
                 <p class="font-body-md text-body-md text-on-surface-variant">Administra las clasificaciones de tus productos para un mejor control del catálogo.</p>
             </div>
-            {{-- SE CONECTÓ EL EVENTO CLICK PARA ABRIR TU MODAL --}}
-            <button onclick="toggleModal('category-modal')" class="bg-primary text-white flex items-center gap-sm px-lg py-3 rounded-xl font-title-md hover:opacity-90 active:scale-95 transition-all shadow-sm">
+            <button onclick="openCreateModal()" class="bg-primary text-white flex items-center gap-sm px-lg py-3 rounded-xl font-title-md hover:opacity-90 active:scale-95 transition-all shadow-sm">
                 <span class="material-symbols-outlined">add</span>
                 Nueva Categoría
             </button>
@@ -75,7 +74,8 @@
                         <span class="absolute inset-y-0 left-3 flex items-center text-outline">
                             <span class="material-symbols-outlined text-[18px]">search</span>
                         </span>
-                        <input class="w-full pl-10 pr-4 py-2 text-body-md border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container outline-none transition-all" placeholder="Filtrar por nombre o ID..." type="text"/>
+                        {{-- ASIGNADO EL ID PARA EL FILTRADO POR JAVASCRIPT --}}
+                        <input id="table-search" class="w-full pl-10 pr-4 py-2 text-body-md border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container outline-none transition-all" placeholder="Filtrar por nombre o ID..." type="text"/>
                     </div>
                     <button class="flex items-center gap-xs px-md py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container-low font-label-lg transition-colors">
                         <span class="material-symbols-outlined text-[18px]">filter_list</span>
@@ -84,10 +84,11 @@
                 </div>
                 <div class="flex items-center gap-sm">
                     <span class="font-label-md text-label-md text-on-surface-variant">Mostrar:</span>
-                    <select class="border border-outline-variant rounded-lg text-body-md px-2 py-1 outline-none focus:ring-1 focus:ring-primary">
-                        <option>10</option>
-                        <option>25</option>
-                        <option>50</option>
+                    {{-- SELECTOR CON RECARGA DINÁMICA DE REGISTROS --}}
+                    <select onchange="window.location.href = '{{ route('categories.index') }}?perPage=' + this.value" class="border border-outline-variant rounded-lg text-body-md px-2 py-1 outline-none focus:ring-1 focus:ring-primary">
+                        <option value="10" {{ request('perPage') == 10 ? 'selected' : '' }}>10</option>
+                        <option value="25" {{ request('perPage') == 25 ? 'selected' : '' }}>25</option>
+                        <option value="50" {{ request('perPage') == 50 ? 'selected' : '' }}>50</option>
                     </select>
                 </div>
             </div>
@@ -123,10 +124,10 @@
                                 </td>
                                 <td class="px-md py-4 text-right">
                                     <div class="flex justify-end gap-xs md:opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+                                        <button onclick="openEditModal({{ $categoria->id }}, '{{ addslashes($categoria->nombre) }}', '{{ addslashes($categoria->descripcion) }}')" class="p-2 text-on-surface-variant hover:text-primary transition-colors">
                                             <span class="material-symbols-outlined text-[20px]">edit</span>
                                         </button>
-                                        <button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+                                        <button onclick="openDeleteModal({{ $categoria->id }}, '{{ addslashes($categoria->nombre) }}')" class="p-2 text-on-surface-variant hover:text-error transition-colors">
                                             <span class="material-symbols-outlined text-[20px]">delete</span>
                                         </button>
                                     </div>
@@ -143,13 +144,11 @@
                 </table>
             </div>
 
-            {{-- SISTEMA DE PAGINACIÓN DINÁMICO REFACTORIZADO CON TU DISEÑO --}}
             <div class="bg-white border border-outline-variant rounded-b-xl p-md flex flex-col md:flex-row justify-between items-center gap-md">
                 <span class="font-body-md text-on-surface-variant">
                     Mostrando {{ $categorias->firstItem() ?? 0 }}-{{ $categorias->lastItem() ?? 0 }} de {{ $categorias->total() }} categorías
                 </span>
                 <div class="flex items-center gap-xs">
-                    {{-- Botón Anterior --}}
                     @if ($categorias->onFirstPage())
                         <button class="w-10 h-10 flex items-center justify-center border border-outline-variant rounded-lg text-outline-variant cursor-not-allowed" disabled>
                             <span class="material-symbols-outlined">chevron_left</span>
@@ -160,7 +159,6 @@
                         </a>
                     @endif
 
-                    {{-- Números de Páginas --}}
                     @foreach ($categorias->getUrlRange(max(1, $categorias->currentPage() - 1), min($categorias->lastPage(), $categorias->currentPage() + 1)) as $page => $url)
                         @if ($page == $categorias->currentPage())
                             <button class="w-10 h-10 flex items-center justify-center bg-primary text-white rounded-lg font-label-lg">{{ $page }}</button>
@@ -169,7 +167,6 @@
                         @endif
                     @endforeach
 
-                    {{-- Botón Siguiente --}}
                     @if ($categorias->hasMorePages())
                         <a href="{{ $categorias->nextPageUrl() }}" class="w-10 h-10 flex items-center justify-center border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors text-on-surface-variant">
                             <span class="material-symbols-outlined">chevron_right</span>
@@ -201,35 +198,59 @@
     </main>
 </div>
 
-{{-- NUEVO: MODAL DE REGISTRO CONSTRUIDO CON TUS MISMOS ESTILOS Y CLASES --}}
+{{-- MODAL DE REGISTRO / EDICIÓN DINÁMICO --}}
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-on-surface/40 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 p-4" id="category-modal">
     <div class="bg-white border border-outline-variant w-full max-w-md rounded-xl shadow-2xl scale-95 transition-transform duration-300 overflow-hidden flex flex-col">
         
         <div class="p-md border-b border-outline-variant flex items-center justify-between">
-            <h3 class="font-headline-md text-headline-md text-on-surface">Nueva Categoría</h3>
+            <h3 class="font-headline-md text-headline-md text-on-surface" id="modal-title">Nueva Categoría</h3>
             <button class="p-2 hover:bg-surface-container-low rounded-full transition-colors" onclick="toggleModal('category-modal')">
                 <span class="material-symbols-outlined">close</span>
             </button>
         </div>
         
-        <form action="{{ route('categories.store') }}" method="POST" class="flex flex-col">
+        <form id="category-form" action="{{ route('categories.store') }}" method="POST" class="flex flex-col">
             @csrf
+            <div id="method-container"></div>
 
             <div class="p-md flex flex-col gap-md">
                 <div>
                     <label class="block font-label-lg text-label-lg text-on-surface-variant mb-2">Nombre de la Categoría</label>
-                    <input name="nombre" value="{{ old('nombre') }}" class="w-full px-4 py-2 text-body-md border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container outline-none transition-all" placeholder="Ej: Bebidas, Lácteos, Abarrotes" type="text" required/>
+                    <input id="category-nombre" name="nombre" value="{{ old('nombre') }}" class="w-full px-4 py-2 text-body-md border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container outline-none transition-all" placeholder="Ej: Bebidas, Lácteos, Abarrotes" type="text" required/>
                 </div>
 
                 <div>
                     <label class="block font-label-lg text-label-lg text-on-surface-variant mb-2">Descripción (Opcional)</label>
-                    <textarea name="descripcion" class="w-full px-4 py-2 text-body-md border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container outline-none transition-all" rows="4" placeholder="Ingresa una breve descripción de la categoría...">{{ old('descripcion') }}</textarea>
+                    <textarea id="category-descripcion" name="descripcion" class="w-full px-4 py-2 text-body-md border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container outline-none transition-all" rows="4" placeholder="Ingresa una breve descripción de la categoría...">{{ old('descripcion') }}</textarea>
                 </div>
             </div>
             
             <div class="p-md bg-surface-container-low border-t border-outline-variant flex justify-end gap-md">
                 <button type="button" class="px-md py-2 border border-outline-variant rounded-lg font-label-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" onclick="toggleModal('category-modal')">Cancelar</button>
-                <button type="submit" class="bg-primary text-white px-lg py-2 rounded-lg font-title-md hover:opacity-90 active:scale-95 transition-all shadow-sm">Guardar Categoría</button>
+                <button type="submit" id="modal-submit-btn" class="bg-primary text-white px-lg py-2 rounded-lg font-title-md hover:opacity-90 active:scale-95 transition-all shadow-sm">Guardar Categoría</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- MODAL DE CONFIRMACIÓN DE ELIMINACIÓN --}}
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-on-surface/40 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 p-4" id="delete-modal">
+    <div class="bg-white border border-outline-variant w-full max-w-sm rounded-xl shadow-2xl scale-95 transition-transform duration-300 overflow-hidden flex flex-col">
+        <div class="p-md flex flex-col items-center text-center gap-sm pt-lg">
+            <div class="w-12 h-12 bg-error-container text-on-error-container rounded-full flex items-center justify-center mb-xs">
+                <span class="material-symbols-outlined text-[28px]">delete_forever</span>
+            </div>
+            <h3 class="font-headline-md text-headline-md text-on-surface">¿Eliminar Categoría?</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant px-sm">
+                Estás seguro de eliminar la categoría <span id="delete-category-name" class="font-bold text-on-surface text-primary"></span>. Esta acción no se puede deshacer.
+            </p>
+        </div>
+        <form id="delete-form" method="POST" class="m-0 p-0">
+            @csrf
+            @method('DELETE')
+            <div class="p-md bg-surface-container-low border-t border-outline-variant flex justify-center gap-md">
+                <button type="button" class="px-md py-2 border border-outline-variant rounded-lg font-label-lg text-on-surface-variant hover:bg-surface-container-low transition-colors w-1/2" onclick="toggleModal('delete-modal')">Cancelar</button>
+                <button type="submit" class="bg-error text-white px-lg py-2 rounded-lg font-title-md hover:opacity-90 active:scale-95 transition-all shadow-sm w-1/2">Eliminar</button>
             </div>
         </form>
     </div>
@@ -247,9 +268,30 @@
                 }
             });
         });
+
+        // NUEVO: FILTRADO EN TIEMPO REAL SOBRE LA TABLA (Mantiene estilos intactos)
+        const tableSearch = document.getElementById('table-search');
+        if (tableSearch) {
+            tableSearch.addEventListener('input', function(e) {
+                const text = e.target.value.toLowerCase().trim();
+                const rows = document.querySelectorAll('table tbody tr');
+
+                rows.forEach(row => {
+                    if (row.cells.length === 1) return; // Evita romper la fila vacía
+
+                    const idText = row.cells[0].textContent.toLowerCase();
+                    const nameText = row.cells[1].textContent.toLowerCase();
+                    
+                    if (idText.includes(text) || nameText.includes(text)) {
+                        row.classList.remove('hidden');
+                    } else {
+                        row.classList.add('hidden');
+                    }
+                });
+            });
+        }
     });
 
-    // Función fluida para abrir y cerrar el modal respetando tu jerarquía
     function toggleModal(id) {
         const modal = document.getElementById(id);
         const content = modal.querySelector('div');
@@ -264,6 +306,40 @@
             content.classList.add('scale-95');
             document.body.classList.remove('overflow-hidden');
         }
+    }
+
+    function openCreateModal() {
+        const form = document.getElementById('category-form');
+        document.getElementById('modal-title').textContent = 'Nueva Categoría';
+        document.getElementById('modal-submit-btn').textContent = 'Guardar Categoría';
+        document.getElementById('method-container').innerHTML = '';
+        form.action = "{{ route('categories.store') }}";
+        
+        document.getElementById('category-nombre').value = '';
+        document.getElementById('category-descripcion').value = '';
+        
+        toggleModal('category-modal');
+    }
+
+    function openEditModal(id, nombre, descripcion) {
+        const form = document.getElementById('category-form');
+        document.getElementById('modal-title').textContent = 'Editar Categoría';
+        document.getElementById('modal-submit-btn').textContent = 'Actualizar Categoría';
+        
+        document.getElementById('method-container').innerHTML = `@method('PUT')`;
+        form.action = `/categorias/${id}`;
+        
+        document.getElementById('category-nombre').value = nombre;
+        document.getElementById('category-descripcion').value = descripcion;
+        
+        toggleModal('category-modal');
+    }
+
+    function openDeleteModal(id, nombre) {
+        const form = document.getElementById('delete-form');
+        document.getElementById('delete-category-name').textContent = `"${nombre}"`;
+        form.action = `/categorias/${id}`;
+        toggleModal('delete-modal');
     }
 </script>
 @endsection

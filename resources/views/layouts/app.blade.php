@@ -116,13 +116,20 @@
 </head>
 <body class="bg-background text-on-surface">
 
-    <!-- TopNavBar -->
     <nav class="fixed top-0 right-0 left-64 z-50 flex justify-between items-center px-margin-desktop h-16 bg-surface-container-lowest dark:bg-surface-dim border-b border-outline-variant dark:border-outline">
         <div class="flex items-center gap-md">
             <span class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim">Distribuidora ElSurtidor</span>
-            <div class="relative ml-lg">
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
-                <input class="pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg font-body-md text-body-md w-80 focus:outline-none focus:border-primary" placeholder="Buscar pedidos, productos..." type="text"/>
+            
+            <div class="relative ml-lg" id="search-container">
+                <form id="search-form" action="{{ route('inventory') }}" method="GET" class="m-0 p-0 flex items-center">
+                    <button type="submit" class="absolute left-3 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors focus:outline-none">
+                        <span class="material-symbols-outlined block">search</span>
+                    </button>
+                    <input id="global-search" name="search" class="pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg font-body-md text-body-md w-80 focus:outline-none focus:border-primary" placeholder="Buscar pedidos, productos..." type="text" autocomplete="off"/>
+                </form>
+                
+                <div id="search-results" class="absolute left-0 mt-2 w-96 bg-white dark:bg-inverse-surface border border-outline-variant rounded-xl shadow-xl hidden z-[100] max-h-96 overflow-y-auto">
+                    </div>
             </div>
         </div>
         <div class="flex items-center gap-lg">
@@ -131,14 +138,12 @@
                 <span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:bg-surface-container-high p-2 rounded-full transition-colors" data-icon="settings">settings</span>
             </div>
             <div class="flex items-center gap-sm">
-                <!-- Nombre del usuario dinámico de Laravel -->
                 <span class="font-body-md font-medium text-on-surface-variant hidden md:inline">{{ Auth::user()->name }}</span>
                 <img alt="User profile" class="w-8 h-8 rounded-full border border-outline-variant" src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&color=7F9CF5&background=EBF4FF"/>
             </div>
         </div>
     </nav>
 
-    <!-- SideNavBar -->
     <aside class="h-screen w-64 fixed left-0 top-0 flex flex-col py-lg bg-surface dark:bg-on-background border-r border-outline-variant dark:border-outline z-[60]">
         <div class="px-md mb-xl flex items-center gap-sm">
             <div class="w-10 h-10 bg-primary flex items-center justify-center rounded-xl shadow-sm">
@@ -150,71 +155,144 @@
             </div>
         </div>
         
-<nav class="flex-1 flex flex-col gap-1">
+        <nav class="flex-1 flex flex-col gap-1">
             <a class="flex items-center gap-md {{ Request::routeIs('dashboard') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed' : 'text-secondary dark:text-secondary-fixed' }} rounded-xl mx-2 py-3 px-4 hover:translate-x-1 transition-all duration-200" href="{{ route('dashboard') }}">
                 <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
                 <span class="font-label-lg text-label-lg">Dashboard</span>
             </a>
-            <a class="flex items-center gap-md {{ Request::routeIs('inventory') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed' : 'text-secondary dark:text-secondary-fixed' }} rounded-xl mx-2 py-3 px-4 hover:translate-x-1 transition-all duration-200" 
-            href="{{ route('inventory') }}">
+            <a class="flex items-center gap-md {{ Request::routeIs('inventory') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed' : 'text-secondary dark:text-secondary-fixed' }} rounded-xl mx-2 py-3 px-4 hover:translate-x-1 transition-all duration-200" href="{{ route('inventory') }}">
                 <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
                 <span class="font-label-lg text-label-lg">Inventory</span>
             </a>
             
-            {{-- SE CORRIGIÓ EL NOMBRE A 'categories.index' Y SE AÑADIÓ LA CLASE ACTIVA DE TU DISEÑO --}}
-            <a class="flex items-center gap-md py-3 mx-2 px-4 transition-all hover:translate-x-1 duration-200 {{ Request::routeIs('categories.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl' : 'text-secondary dark:text-secondary-fixed hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" 
-            href="{{ route('categories.index') }}">
+            <a class="flex items-center gap-md py-3 mx-2 px-4 transition-all hover:translate-x-1 duration-200 {{ Request::routeIs('categories.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl' : 'text-secondary dark:text-secondary-fixed hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" href="{{ route('categories.index') }}">
                 <span class="material-symbols-outlined">category</span>
                 <span class="font-label-lg text-label-lg">Categories</span>
             </a>
             
-            <a class="flex items-center gap-md py-3 mx-2 px-4 transition-all hover:translate-x-1 duration-200 {{ request()->routeIs('partners.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl' : 'text-secondary dark:text-secondary-fixed hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" 
-            href="{{ route('partners.index') }}">
+            <a class="flex items-center gap-md py-3 mx-2 px-4 transition-all hover:translate-x-1 duration-200 {{ request()->routeIs('partners.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl' : 'text-secondary dark:text-secondary-fixed hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" href="{{ route('partners.index') }}">
                 <span class="material-symbols-outlined" data-icon="group">group</span>
                 <span class="font-label-lg text-label-lg">Partners</span>
             </a>
-                <a class="flex items-center gap-md py-3 mx-2 px-4 transition-all duration-200 hover:translate-x-1 {{ request()->routeIs('sales.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl' : 'text-secondary dark:text-secondary-fixed hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" href="{{ route('sales.index') }}">
-                    <span class="material-symbols-outlined" style="{{ request()->routeIs('sales.index') ? 'font-variation-settings: \'FILL\' 1;' : '' }}">point_of_sale</span>
-                    <span class="font-label-lg text-label-lg">Sales</span>
-                </a>
-            <a class="py-3 mx-2 font-label-lg text-label-lg transition-all hover:translate-x-1 flex items-center px-md gap-md {{ request()->routeIs('reportes.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl font-bold' : 'text-secondary hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" 
-            href="{{ route('reportes.index') }}">
+            <a class="flex items-center gap-md py-3 mx-2 px-4 transition-all duration-200 hover:translate-x-1 {{ request()->routeIs('sales.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl' : 'text-secondary dark:text-secondary-fixed hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" href="{{ route('sales.index') }}">
+                <span class="material-symbols-outlined" style="{{ request()->routeIs('sales.index') ? 'font-variation-settings: \'FILL\' 1;' : '' }}">point_of_sale</span>
+                <span class="font-label-lg text-label-lg">Sales</span>
+            </a>
+            <a class="py-3 mx-2 font-label-lg text-label-lg transition-all hover:translate-x-1 flex items-center px-md gap-md {{ request()->routeIs('reportes.index') ? 'bg-secondary-container dark:bg-secondary-fixed-dim text-on-secondary-container dark:text-on-secondary-fixed rounded-xl font-bold' : 'text-secondary hover:bg-surface-container-highest dark:hover:bg-surface-container' }}" href="{{ route('reportes.index') }}">
                 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assessment</span>
                 <span>Reports</span>
             </a>
 
-        <div class="mt-auto border-t border-outline-variant pt-md flex flex-col gap-1">
-            <a class="flex items-center gap-md text-secondary dark:text-secondary-fixed py-3 mx-2 px-4 hover:bg-surface-container-highest dark:hover:bg-surface-container transition-all" href="#">
-                <span class="material-symbols-outlined" data-icon="help">help</span>
-                <span class="font-label-lg text-label-lg">Help</span>
-            </a>
-            
-            <!-- Botón de Cierre de Sesión Seguro -->
-            <form method="POST" action="{{ route('logout') }}" id="logoutForm">
-                @csrf
-                <a class="flex items-center gap-md text-error py-3 mx-2 px-4 hover:bg-error-container transition-all cursor-pointer" 
-                   onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">
-                    <span class="material-symbols-outlined" data-icon="logout">logout</span>
-                    <span class="font-label-lg text-label-lg">Logout</span>
+            <div class="mt-auto border-t border-outline-variant pt-md flex flex-col gap-1">
+                <a class="flex items-center gap-md text-secondary dark:text-secondary-fixed py-3 mx-2 px-4 hover:bg-surface-container-highest dark:hover:bg-surface-container transition-all" href="#">
+                    <span class="material-symbols-outlined" data-icon="help">help</span>
+                    <span class="font-label-lg text-label-lg">Help</span>
                 </a>
-            </form>
-        </div>
+                
+                <form method="POST" action="{{ route('logout') }}" id="logoutForm">
+                    @csrf
+                    <a class="flex items-center gap-md text-error py-3 mx-2 px-4 hover:bg-error-container transition-all cursor-pointer" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">
+                        <span class="material-symbols-outlined" data-icon="logout">logout</span>
+                        <span class="font-label-lg text-label-lg">Logout</span>
+                    </a>
+                </form>
+            </div>
+        </nav>
     </aside>
 
-    <!-- Canvas de Contenido Dinámico -->
     <main class="ml-64 mt-16 p-margin-desktop min-h-screen">
         @yield('content')
     </main>
 
     <script>
-        // Efecto focus barra de búsqueda
-        const searchInput = document.querySelector('input[type="text"]');
+        const searchInput = document.getElementById('global-search');
+        const searchResults = document.getElementById('search-results');
+        const searchForm = document.getElementById('search-form');
+        let debounceTimer;
+
         if(searchInput) {
+            // Estilos del contenedor al hacer foco
             searchInput.addEventListener('focus', () => {
-                searchInput.parentElement.classList.add('ring-2', 'ring-primary/20');
+                searchInput.parentElement.parentElement.classList.add('ring-2', 'ring-primary/20');
+                if(searchResults.children.length > 0) searchResults.classList.remove('hidden');
             });
+            
             searchInput.addEventListener('blur', () => {
-                searchInput.parentElement.classList.remove('ring-2', 'ring-primary/20');
+                searchInput.parentElement.parentElement.classList.remove('ring-2', 'ring-primary/20');
+                // Retraso para que el clic en los enlaces de la lista funcione antes de ocultarse
+                setTimeout(() => searchResults.classList.add('hidden'), 250);
+            });
+
+            // CONTROL DE LA TECLA INTRO / ENTER
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const query = searchInput.value.trim();
+                    // Si el usuario escribe algo y da enter, viaja directo a la vista de inventario con el parámetro
+                    if(query.length > 0) {
+                        searchForm.submit(); 
+                    } else {
+                        e.preventDefault();
+                    }
+                }
+            });
+
+            // BÚSQUEDA EN TIEMPO REAL (PREDICTIVA)
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(debounceTimer);
+                const query = e.target.value.trim();
+
+                if (query.length < 2) {
+                    searchResults.innerHTML = '';
+                    searchResults.classList.add('hidden');
+                    return;
+                }
+
+                debounceTimer = setTimeout(() => {
+                    fetch(`/buscar-global?q=${encodeURIComponent(query)}`)
+                        ->then(res => res.json())
+                        ->then(data => {
+                            let html = '';
+
+                            // Inyección de Productos
+                            if (data.productos && data.productos.length > 0) {
+                                html += `<div class="px-4 py-2 bg-surface-container-low dark:bg-surface-container font-label-lg text-primary dark:text-primary-fixed-dim uppercase text-[11px] tracking-wider border-b border-outline-variant">Productos</div>`;
+                                data.productos.forEach(p => {
+                                    html += `
+                                        <a href="/inventory?search=${p.nombre}" class="flex items-center justify-between p-3 hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors border-b border-outline-variant/40 last:border-0 block">
+                                            <div>
+                                                <p class="font-body-md text-on-surface dark:text-white font-medium">${p.nombre}</p>
+                                                <p class="text-[12px] text-outline">Ref: ${p.codigo_barras}</p>
+                                            </div>
+                                            <span class="font-tabular-nums text-secondary dark:text-secondary-fixed-dim font-semibold">$${parseFloat(p.precio_venta).toFixed(2)}</span>
+                                        </a>`;
+                                });
+                            }
+
+                            // Inyección de Pedidos/Ventas
+                            if (data.ventas && data.ventas.length > 0) {
+                                html += `<div class="px-4 py-2 bg-surface-container-low dark:bg-surface-container font-label-lg text-primary dark:text-primary-fixed-dim uppercase text-[11px] tracking-wider border-b border-outline-variant">Pedidos</div>`;
+                                data.ventas.forEach(v => {
+                                    const clienteNombre = v.cliente ? v.cliente.nombre_tienda : 'Cliente General';
+                                    html += `
+                                        <a href="/sales" class="flex items-center justify-between p-3 hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors border-b border-outline-variant/40 last:border-0 block">
+                                            <div>
+                                                <p class="font-body-md text-primary dark:text-primary-fixed-dim font-semibold">#${v.numero_factura}</p>
+                                                <p class="text-[12px] text-outline">${clienteNombre}</p>
+                                            </div>
+                                            <span class="px-2 py-0.5 text-[11px] rounded-full font-bold bg-secondary-container text-on-secondary-container uppercase">${v.estado}</span>
+                                        </a>`;
+                                });
+                            }
+
+                            if ((!data.productos || data.productos.length === 0) && (!data.ventas || data.ventas.length === 0)) {
+                                html = `<p class="p-4 text-center font-body-md text-outline">No se encontraron de coincidencias.</p>`;
+                            }
+
+                            searchResults.innerHTML = html;
+                            searchResults.classList.remove('hidden');
+                        })
+                        ->catch(err => console.error("Error en búsqueda global:", err));
+                }, 300);
             });
         }
     </script>

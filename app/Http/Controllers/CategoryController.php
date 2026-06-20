@@ -8,12 +8,15 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     /**
-     * Muestra el listado de categorías con tu diseño.
+     * Muestra el listado de categorías con tu diseño y paginación dinámica.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Trae las categorías ordenadas por las más recientes, de 10 en 10
-        $categorias = Categoria::latest()->paginate(10);
+        // Captura cuántos elementos mostrar por página (por defecto 10)
+        $perPage = $request->input('perPage', 10);
+
+        // Trae las categorías ordenadas por las más recientes con paginación variable
+        $categorias = Categoria::latest()->paginate($perPage)->withQueryString();
         
         // El compact envía la variable '$categorias' directo a tu tabla y tarjetas
         return view('categories', compact('categorias'));
@@ -35,5 +38,33 @@ class CategoryController extends Controller
 
         // Te regresa a la misma vista con el mensaje de éxito que lee tu alerta
         return redirect()->route('categories.index')->with('success', '¡Categoría creada exitosamente!');
+    }
+
+    /**
+     * Actualiza la categoría existente.
+     */
+    public function update(Request $request, $id)
+    {
+        $categoria = Categoria::findOrFail($id);
+
+        $data = $request->validate([
+            'nombre'      => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+        ]);
+
+        $categoria->update($data);
+
+        return redirect()->route('categories.index')->with('success', '¡Categoría actualizada con éxito!');
+    }
+
+    /**
+     * Elimina la categoría seleccionada.
+     */
+    public function destroy($id)
+    {
+        $categoria = Categoria::findOrFail($id);
+        $categoria->delete();
+
+        return redirect()->route('categories.index')->with('success', '¡Categoría eliminada correctamente!');
     }
 }
