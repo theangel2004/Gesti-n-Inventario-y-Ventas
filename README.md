@@ -108,153 +108,287 @@ Gestiona la lógica de negocio y las solicitudes HTTP.
 
 # 🗄️ Modelo Entidad Relación (MER)
 
+El Sistema de Gestión de Inventario y Ventas está diseñado sobre una base de datos relacional que permite administrar productos, categorías, proveedores, clientes y ventas, garantizando la integridad de la información mediante claves primarias y foráneas.
+
 ## Diagrama MER
 
-El siguiente diagrama representa la estructura de la base de datos utilizada por el sistema.
+Guarda la imagen del diagrama dentro de la carpeta `docs/` con el nombre `MER.png`.
 
-> Guarda la imagen que compartiste dentro de la carpeta `docs` con el nombre `MER.png`.
-
-```text
-docs/
-└── MER.png
+```html
+<p align="center">
+  <img src="docs/MER.png" alt="MER Sistema de Inventario y Ventas" width="900">
+</p>
 ```
 
-<p align="center">
-    <img src="docs/MER.png" alt="MER Sistema Inventario" width="900">
-</p>
+---
+
+# 📋 Entidades del Negocio
+
+## Categorías
+
+Permite clasificar los productos según su tipo o grupo.
+
+| Campo       | Tipo       | Restricción |
+| ----------- | ---------- | ----------- |
+| id          | BigInteger | PK          |
+| nombre      | String     | Requerido   |
+| descripcion | Text       | Nullable    |
+| created_at  | Timestamp  | Automático  |
+| updated_at  | Timestamp  | Automático  |
 
 ---
 
-## Entidades Principales
+## Proveedores
 
-### Categorías
+Almacena la información de los proveedores encargados del abastecimiento de productos.
 
-Permite clasificar los productos según su tipo.
-
-| Campo | Tipo |
-|---------|---------|
-| id | BIGINT |
-| nombre | VARCHAR(255) |
-| descripcion | TEXT |
-| created_at | TIMESTAMP |
-| updated_at | TIMESTAMP |
-
----
-
-### Proveedores
-
-Información de los proveedores encargados del abastecimiento.
-
-| Campo | Tipo |
-|---------|---------|
-| id | BIGINT |
-| nombre | VARCHAR(255) |
-| contacto_nombre | VARCHAR(255) |
-| telefono | VARCHAR(255) |
-| email | VARCHAR(255) |
-| direccion | VARCHAR(255) |
-| created_at | TIMESTAMP |
-| updated_at | TIMESTAMP |
+| Campo           | Tipo       | Restricción |
+| --------------- | ---------- | ----------- |
+| id              | BigInteger | PK          |
+| nombre          | String     | Requerido   |
+| contacto_nombre | String     | Nullable    |
+| telefono        | String     | Requerido   |
+| email           | String     | Nullable    |
+| direccion       | String     | Nullable    |
+| created_at      | Timestamp  | Automático  |
+| updated_at      | Timestamp  | Automático  |
 
 ---
 
-### Productos
+## Clientes
 
-Almacena la información de los productos disponibles para la venta.
+Almacena la información de los clientes registrados en el sistema.
 
-| Campo | Tipo |
-|---------|---------|
-| id | BIGINT |
-| codigo_barras | VARCHAR(255) |
-| nombre | VARCHAR(255) |
-| descripcion | TEXT |
-| precio_venta | DECIMAL(10,2) |
-| stock_actual | INT |
-| stock_minimo | INT |
-| unidad_medida | VARCHAR(255) |
-| proveedor_id | BIGINT |
-| categoria_id | BIGINT |
+| Campo           | Tipo       | Restricción |
+| --------------- | ---------- | ----------- |
+| id              | BigInteger | PK          |
+| nit_cc          | String     | Único       |
+| nombre_tienda   | String     | Requerido   |
+| nombre_contacto | String     | Requerido   |
+| telefono        | String     | Requerido   |
+| direccion       | String     | Requerido   |
+| created_at      | Timestamp  | Automático  |
+| updated_at      | Timestamp  | Automático  |
 
 ---
 
-### Clientes
+## Productos
 
-Contiene la información de los clientes registrados.
+Contiene la información de los artículos disponibles para la venta.
 
-| Campo | Tipo |
-|---------|---------|
-| id | BIGINT |
-| nit_cc | VARCHAR(255) |
-| nombre_tienda | VARCHAR(255) |
-| nombre_contacto | VARCHAR(255) |
-| telefono | VARCHAR(255) |
-| direccion | VARCHAR(255) |
+| Campo         | Tipo          | Restricción |
+| ------------- | ------------- | ----------- |
+| id            | BigInteger    | PK          |
+| codigo_barras | String        | Único       |
+| nombre        | String        | Requerido   |
+| descripcion   | Text          | Nullable    |
+| precio_venta  | Decimal(10,2) | Requerido   |
+| stock_actual  | Integer       | Requerido   |
+| stock_minimo  | Integer       | Requerido   |
+| unidad_medida | String        | Requerido   |
+| proveedor_id  | BigInteger    | FK          |
+| categoria_id  | BigInteger    | FK          |
+| created_at    | Timestamp     | Automático  |
+| updated_at    | Timestamp     | Automático  |
 
 ---
 
-### Ventas
+## Ventas
 
 Registra las transacciones comerciales realizadas.
 
-| Campo | Tipo |
-|---------|---------|
-| id | BIGINT |
-| numero_factura | VARCHAR(255) |
-| fecha_venta | DATETIME |
-| total | DECIMAL(10,2) |
-| metodo_pago | ENUM |
-| estado | ENUM |
-| cliente_id | BIGINT |
+| Campo          | Tipo          | Restricción                        |
+| -------------- | ------------- | ---------------------------------- |
+| id             | BigInteger    | PK                                 |
+| numero_factura | String        | Único                              |
+| fecha_venta    | DateTime      | Requerido                          |
+| total          | Decimal(10,2) | Requerido                          |
+| metodo_pago    | Enum          | contado / credito                  |
+| estado         | Enum          | pendiente / despachado / cancelado |
+| cliente_id     | BigInteger    | FK                                 |
+| created_at     | Timestamp     | Automático                         |
+| updated_at     | Timestamp     | Automático                         |
 
 ---
 
-### Detalle_Ventas
+## Detalle_Ventas
 
-Tabla intermedia que almacena los productos vendidos en cada factura.
+Entidad asociativa encargada de relacionar productos con ventas.
 
-| Campo | Tipo |
-|---------|---------|
-| id | BIGINT |
-| venta_id | BIGINT |
-| producto_id | BIGINT |
-| cantidad | INT |
-| precio_unitario | DECIMAL(10,2) |
+| Campo           | Tipo          | Restricción |
+| --------------- | ------------- | ----------- |
+| id              | BigInteger    | PK          |
+| venta_id        | BigInteger    | FK          |
+| producto_id     | BigInteger    | FK          |
+| cantidad        | Integer       | Requerido   |
+| precio_unitario | Decimal(10,2) | Requerido   |
+| created_at      | Timestamp     | Automático  |
+| updated_at      | Timestamp     | Automático  |
+
+---
+
+# 🔗 Relaciones del Sistema
+
+## Categorías → Productos
+
+**Cardinalidad: 1:N (Uno a Muchos)**
+
+Una categoría puede contener múltiples productos, mientras que un producto pertenece únicamente a una categoría.
 
 ---
 
-## Relaciones del Sistema
+## Proveedores → Productos
 
-### Categorías → Productos
+**Cardinalidad: 1:N (Uno a Muchos)**
 
-**1:N**
-
-Una categoría puede contener múltiples productos.
-
-### Proveedores → Productos
-
-**1:N**
-
-Un proveedor puede suministrar múltiples productos.
-
-### Clientes → Ventas
-
-**1:N**
-
-Un cliente puede realizar múltiples compras.
-
-### Ventas → Detalle_Ventas
-
-**1:N**
-
-Una venta puede contener varios productos.
-
-### Productos → Detalle_Ventas
-
-**1:N**
-
-Un producto puede aparecer en múltiples ventas.
+Un proveedor puede suministrar múltiples productos, mientras que cada producto está asociado a un único proveedor.
 
 ---
+
+## Clientes → Ventas
+
+**Cardinalidad: 1:N (Uno a Muchos)**
+
+Un cliente puede realizar múltiples compras, mientras que cada venta pertenece a un único cliente.
+
+---
+
+## Ventas ↔ Productos
+
+**Cardinalidad: N:M (Muchos a Muchos)**
+
+Una venta puede incluir múltiples productos y un producto puede estar presente en múltiples ventas.
+
+Esta relación se implementa mediante la entidad asociativa **detalle_ventas**, generando dos relaciones:
+
+* Una venta tiene muchos detalles de venta.
+* Un producto aparece en muchos detalles de venta.
+
+---
+
+# 📐 Diagrama MER en Mermaid
+
+```mermaid
+erDiagram
+    CATEGORIAS ||--o{ PRODUCTOS : clasifica
+    PROVEEDORES ||--o{ PRODUCTOS : surte
+    CLIENTES ||--o{ VENTAS : compra
+    VENTAS ||--o{ DETALLE_VENTAS : contiene
+    PRODUCTOS ||--o{ DETALLE_VENTAS : se_registra_en
+
+    CATEGORIAS {
+        bigint id PK
+        string nombre
+        text descripcion
+    }
+
+    PROVEEDORES {
+        bigint id PK
+        string nombre
+        string contacto_nombre
+        string telefono
+        string email
+        string direccion
+    }
+
+    CLIENTES {
+        bigint id PK
+        string nit_cc UK
+        string nombre_tienda
+        string nombre_contacto
+        string telefono
+        string direccion
+    }
+
+    PRODUCTOS {
+        bigint id PK
+        string codigo_barras UK
+        string nombre
+        text descripcion
+        decimal precio_venta
+        integer stock_actual
+        integer stock_minimo
+        string unidad_medida
+        bigint proveedor_id FK
+        bigint categoria_id FK
+    }
+
+    VENTAS {
+        bigint id PK
+        string numero_factura UK
+        datetime fecha_venta
+        decimal total
+        enum metodo_pago
+        enum estado
+        bigint cliente_id FK
+    }
+
+    DETALLE_VENTAS {
+        bigint id PK
+        bigint venta_id FK
+        bigint producto_id FK
+        integer cantidad
+        decimal precio_unitario
+    }
+```
+
+---
+
+# ⚙️ Tablas del Núcleo de Laravel
+
+Además de las tablas de negocio, el sistema utiliza tablas nativas de Laravel para autenticación, sesiones, caché y procesamiento de tareas.
+
+## users
+
+Gestiona las credenciales de acceso de los usuarios del sistema.
+
+Campos principales:
+
+* id
+* name
+* email
+* password
+
+---
+
+## password_reset_tokens
+
+Almacena los tokens temporales utilizados para la recuperación de contraseñas.
+
+---
+
+## sessions
+
+Gestiona las sesiones activas de los usuarios autenticados.
+
+Puede relacionarse lógicamente con la tabla `users` mediante el campo `user_id`.
+
+---
+
+## cache y cache_locks
+
+Utilizadas para optimizar el rendimiento de la aplicación mediante almacenamiento temporal de información.
+
+---
+
+## jobs
+
+Gestiona tareas asíncronas ejecutadas en segundo plano.
+
+---
+
+## job_batches
+
+Agrupa conjuntos de tareas para ejecución masiva.
+
+---
+
+## failed_jobs
+
+Registra errores ocurridos durante la ejecución de trabajos en cola.
+
+Estas tablas forman parte de la infraestructura interna de Laravel y garantizan la seguridad, estabilidad y rendimiento de la aplicación.
+
 
 # ⚙️ Requisitos del Sistema
 
